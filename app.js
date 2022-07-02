@@ -1,6 +1,15 @@
 const express = require('express');
+const helmet = require('helmet');
+const bodyParser = require('body-parser');
+const rescue = require('express-rescue');
+const morgan = require('morgan');
+const router = require('./routers/index');
 
 const app = express();
+
+app.use(bodyParser);
+app.use(helmet());
+app.use(morgan('common'));
 
 // não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {
