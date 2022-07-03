@@ -41,7 +41,7 @@ describe("Products model tests", () => {
         sinon
           .stub(connection, "execute")
           .withArgs(select, [2])
-          .resolves([allProductsResponse[1]]);
+          .resolves([[allProductsResponse[1]]]);
       });
 
       after(async () => {

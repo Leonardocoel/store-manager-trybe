@@ -17,10 +17,10 @@ describe("Products services tests", () => {
           productsModel.getAll.restore();
         });
 
-        it("Verify if the return is an empty array", async () => {
+        it("Verify if the return is null", async () => {
           const response = await productsService.getAll();
 
-          expect(response).to.eql([]);
+          expect(response).is.null;
         });
       });
 
@@ -69,10 +69,10 @@ describe("Products services tests", () => {
           productsModel.getById.restore();
         });
 
-        it("Verify if the return is an empty array", async () => {
+        it("Verify if the return is null", async () => {
           const response = await productsService.getById(2);
 
-          expect(response).to.eql([]);
+          expect(response).is.null;
         });
       });
 

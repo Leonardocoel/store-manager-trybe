@@ -30,7 +30,8 @@ describe("Products controller tests", () => {
 
         it('Verifies if the json is called with the message "There are no products"', async () => {
           await productsController.getAll(req, res, next);
-          expect(res.json.calledWith({ message: 'There are no products' })).to.be.true
+          expect(res.json.calledWith({ message: "There are no products" })).to
+            .be.true;
         });
       });
       describe("When the result is defined", () => {
@@ -39,8 +40,8 @@ describe("Products controller tests", () => {
         const next = sinon.stub().returns();
 
         before(() => {
-          req.status = sinon.stub().returns(res);
-          req.json = sinon.stub();
+          res.status = sinon.stub().returns(res);
+          res.json = sinon.stub().returns();
 
           sinon.stub(productsService, "getAll").resolves(allProductsResponse);
         });
@@ -49,13 +50,13 @@ describe("Products controller tests", () => {
         });
 
         it("Verifies if the status is called with the code 200", async () => {
-          await productsController.getAll(res, req, next);
-          expect(req.status.calledWith(200)).to.be.true;
+          await productsController.getAll(req, res, next);
+          expect(res.status.calledWith(200)).to.be.true;
         });
 
         it("Verify if it sends an array of objects", async () => {
           const result = await productsService.getAll();
-          
+
           expect(result).to.be.an("array");
           result.forEach((r) => {
             expect(r).to.be.an("object");
@@ -71,13 +72,14 @@ describe("Products controller tests", () => {
         const next = sinon.stub().returns();
 
         before(() => {
+          req.params = { id: 2 };
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
           sinon.stub(productsService, "getById").resolves(undefined);
         });
         after(() => {
-          productsService.getAll.restore();
+          productsService.getById.restore();
         });
 
         it("Verifies if the status is called with the code 404", async () => {
@@ -87,7 +89,8 @@ describe("Products controller tests", () => {
 
         it('Verifies if the json is called with the message "Product not found"', async () => {
           await productsController.getById(req, res, next);
-          expect(res.json.calledWith({ message: "Product not found"  })).to.be.true
+          expect(res.json.calledWith({ message: "Product not found" })).to.be
+            .true;
         });
       });
       describe("When the result is defined", () => {
@@ -96,21 +99,22 @@ describe("Products controller tests", () => {
         const next = sinon.stub().returns();
 
         before(() => {
-          req.status = sinon.stub().returns(res);
-          req.json = sinon.stub();
           req.params = { id: 2 };
+          res.status = sinon.stub().returns(res);
+          res.json = sinon.stub().returns();
 
-          sinon.stub(productsService, "getById")
-            .withArgs(2)
-            .resolves(allProductsResponse[1]);
+          sinon.stub(productsService, 'getById')
+          .resolves(allProductsResponse[1])
+         
         });
         after(() => {
-          productsService.getAll.restore();
+          productsService.getById.restore();
         });
 
         it("Verifies if the status is called with the code 200", async () => {
-          await productsController.getById(res, req, next);
-          expect(req.status.calledWith(200)).to.be.true;
+          await productsController.getById(req, res, next);
+
+          expect(res.status.calledWith(200)).to.be.true;
         });
 
         it("Verify if it returns an object", async () => {
@@ -121,12 +125,11 @@ describe("Products controller tests", () => {
 
         it("Verify if the object has the correct information", async () => {
           const response = await productsService.getById();
-
+console.log(response);
           expect(response).to.have.property("id", 2);
           expect(response).to.be.equal(allProductsResponse[1]);
         });
-        });
       });
-    })
+    });
   });
-
+});
