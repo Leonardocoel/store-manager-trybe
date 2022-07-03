@@ -106,11 +106,11 @@ describe("Products services tests", () => {
   describe("Create tests", () => {
     describe("Implement new product", () => {
       describe("When inserted with sucess", () => {
-        const result = { id: 1, name: "productX" };
+        const data = { id: 1, name: "productX" };
         const payload = { name: "productX" };
 
         before(async () => {
-          sinon.stub(productsModel, "create").resolves(result);
+          sinon.stub(productsModel, "create").resolves(data);
         });
 
         after(async () => {
@@ -120,7 +120,7 @@ describe("Products services tests", () => {
         it("Validates if it returns an object with the correct information", async () => {
           const response = await productsService.create(payload);
 
-          expect(response).to.be.an("object").that.is.deep.equal(result)
+          expect(response).to.be.an("object").that.is.deep.equal(data);
         });
       });
     });
