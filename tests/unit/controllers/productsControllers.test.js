@@ -6,7 +6,7 @@ const productsController = require("../../../controllers/productsController");
 const { allProductsResponse } = require("../../../__tests__/_dataMock");
 
 describe("Products controller tests", () => {
-  describe("Read request tests", () => {
+  describe("Read requests tests", () => {
     describe("Require all data", () => {
       describe("When the result is undefined", () => {
         const res = {};
@@ -17,7 +17,7 @@ describe("Products controller tests", () => {
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
-          sinon.stub(productsService, "getAll").resolves(undefined);
+          sinon.stub(productsService, "getAll").resolves(false);
         });
         after(async () => {
           productsService.getAll.restore();
@@ -76,7 +76,7 @@ describe("Products controller tests", () => {
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
-          sinon.stub(productsService, "getById").resolves(undefined);
+          sinon.stub(productsService, "getById").resolves(false);
         });
         after(async () => {
           productsService.getById.restore();
@@ -131,4 +131,62 @@ describe("Products controller tests", () => {
       });
     });
   });
+  describe('Create requests tests', () => {
+    describe('Implement new product', () => {
+      describe('When not inserted successfully', () => {
+        const req = {}
+        const res = {}
+        const next = sinon.stub().returns();
+
+        before(async () => {
+          req.body = {};
+
+          res.status = sinon.stub().returns(res);
+          res.json = sinon.stub().returns();
+
+          sinon.stub(productsService, 'create').resolves(false)
+        })
+
+        after(async () => {
+          productsService.create.restore();
+        })
+
+        it('Verifies if the status is called with the code 400', async () => {
+          await productsController.create(req, res, next);
+          expect(res.status.calledWith(400)).to.be.true;
+        })
+      })
+      describe('When inserted successfully', () => {
+        const req = {}
+        const res = {}
+        const next = sinon.stub().returns();
+        const data = { id: 1, name: "productX" };
+
+        before(async () => {
+          req.body = { name: "productX" };
+
+          res.status = sinon.stub().returns(res);
+          res.json = sinon.stub().returns();
+
+          sinon.stub(productsService, 'create').resolves(data)
+        })
+
+        after(async () => {
+          productsService.create.restore();
+        })
+
+        it('Verifies if the status is called with the code 201', async () => {
+          await productsController.create(req, res, next);
+          expect(res.status.calledWith(200)).to.be.true;
+        })
+
+        it("Verify if the object has the correct information", async () => {
+          const response = await productsService.create();
+
+          expect(response).to.be.an('object').that.have.all.keys(["id", "name"]);
+          expect(response).to.be.equal(data);
+        });
+      })
+    })
+  })
 });
