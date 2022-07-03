@@ -65,7 +65,7 @@ describe("Products model tests", () => {
   describe('Database create tests', () => {
     describe('Insert a new product in the database', () => {
       const payload = {
-        name: 'produtoX'
+        name: 'productX'
       }
       before(async () => {
         const execute = [{ insertId: 1 }];

@@ -103,4 +103,26 @@ describe("Products services tests", () => {
       });
     });
   });
+  describe("Create tests", () => {
+    describe("Implement new product", () => {
+      describe("When inserted with sucess", () => {
+        const result = { id: 1, name: "productX" };
+        const payload = { name: "productX" };
+
+        before(async () => {
+          sinon.stub(productsModel, "create").resolves(result);
+        });
+
+        after(async () => {
+          productsModel.create.restore();
+        });
+
+        it("Validates if it returns an object with the correct information", async () => {
+          const response = await productsService.create(payload);
+
+          expect(response).to.be.an("object").that.is.deep.equal(result)
+        });
+      });
+    });
+  });
 });
