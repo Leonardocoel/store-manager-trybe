@@ -20,7 +20,7 @@ describe("Products services tests", () => {
         it("Verify if the return is an empty array", async () => {
           const response = await productsService.getAll();
 
-          expect(response).to.equal([]);
+          expect(response).to.eql([]);
         });
       });
 
@@ -53,10 +53,10 @@ describe("Products services tests", () => {
 
     describe("Request data by id", () => {
       describe("When the id is not valid", () => {
-        it("Verify if the id is invalid returns false", async () => {
-          const response = await productsService.getById(2);
+        it("Verify if the id is invalid and returns false", async () => {
+          const response = await productsService.getById();
 
-          expect(response).to.be.a("boolean").that.equal(false);
+          expect(response).to.be.a("boolean").to.be.false;
         });
       });
 
@@ -72,7 +72,7 @@ describe("Products services tests", () => {
         it("Verify if the return is an empty array", async () => {
           const response = await productsService.getById(2);
 
-          expect(response).to.equal([]);
+          expect(response).to.eql([]);
         });
       });
 
