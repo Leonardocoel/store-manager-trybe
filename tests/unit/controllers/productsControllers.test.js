@@ -8,18 +8,18 @@ const { allProductsResponse } = require("../../../__tests__/_dataMock");
 describe("Products controller tests", () => {
   describe("Read request tests", () => {
     describe("Require all data", () => {
-      describe("When the result is undefined", async () => {
+      describe("When the result is undefined", () => {
         const res = {};
         const req = {};
         const next = sinon.stub().returns();
 
-        before(() => {
+        before(async () => {
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
           sinon.stub(productsService, "getAll").resolves(undefined);
         });
-        after(() => {
+        after(async () => {
           productsService.getAll.restore();
         });
 
@@ -39,13 +39,13 @@ describe("Products controller tests", () => {
         const res = {};
         const next = sinon.stub().returns();
 
-        before(() => {
+        before(async () => {
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
           sinon.stub(productsService, "getAll").resolves(allProductsResponse);
         });
-        after(() => {
+        after(async () => {
           productsService.getAll.restore();
         });
 
@@ -66,19 +66,19 @@ describe("Products controller tests", () => {
       });
     });
     describe("Require data by id", () => {
-      describe("When the result is undefined", async () => {
+      describe("When the result is undefined", () => {
         const res = {};
         const req = {};
         const next = sinon.stub().returns();
 
-        before(() => {
+        before(async () => {
           req.params = { id: 2 };
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
           sinon.stub(productsService, "getById").resolves(undefined);
         });
-        after(() => {
+        after(async () => {
           productsService.getById.restore();
         });
 
@@ -98,16 +98,16 @@ describe("Products controller tests", () => {
         const res = {};
         const next = sinon.stub().returns();
 
-        before(() => {
+        before(async () => {
           req.params = { id: 2 };
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
-          sinon.stub(productsService, 'getById')
-          .resolves(allProductsResponse[1])
-         
+          sinon
+            .stub(productsService, "getById")
+            .resolves(allProductsResponse[1]);
         });
-        after(() => {
+        after(async () => {
           productsService.getById.restore();
         });
 
@@ -125,7 +125,6 @@ describe("Products controller tests", () => {
 
         it("Verify if the object has the correct information", async () => {
           const response = await productsService.getById();
-console.log(response);
           expect(response).to.have.property("id", 2);
           expect(response).to.be.equal(allProductsResponse[1]);
         });
