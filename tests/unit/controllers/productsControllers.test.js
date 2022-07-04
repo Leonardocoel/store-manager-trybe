@@ -54,7 +54,7 @@ describe("Products controller tests", () => {
           expect(res.status.calledWith(200)).to.be.true;
         });
 
-        it("Verify if it sends an array of objects", async () => {
+        it("Verifies if it sends an array of objects", async () => {
           const result = await productsService.getAll();
 
           expect(result).to.be.an("array");
@@ -117,13 +117,13 @@ describe("Products controller tests", () => {
           expect(res.status.calledWith(200)).to.be.true;
         });
 
-        it("Verify if it returns an object", async () => {
+        it("Verifies if it returns an object", async () => {
           const response = await productsService.getById();
 
           expect(response).to.be.an("object");
         });
 
-        it("Verify if the object has the correct information", async () => {
+        it("Verifies if the object has the correct information", async () => {
           const response = await productsService.getById();
           expect(response).to.have.property("id", 2);
           expect(response).to.be.equal(allProductsResponse[1]);
@@ -131,34 +131,57 @@ describe("Products controller tests", () => {
       });
     });
   });
-  describe('Create requests tests', () => {
-    describe('Implement new product', () => {
-      describe('When not inserted successfully', () => {
-        const req = {}
-        const res = {}
+  describe("Create requests tests", () => {
+    describe("Implement new product", () => {
+      describe("When name is undefined", () => {
+        const req = {};
+        const res = {};
         const next = sinon.stub().returns();
 
-        before(async () => {
+        before(() => {
           req.body = {};
 
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
-          sinon.stub(productsService, 'create').resolves(false)
-        })
-
-        after(async () => {
+          sinon.stub(productsService, "create").resolves("BAD_REQUEST");
+        });
+        after(() => {
           productsService.create.restore();
-        })
+        });
 
-        it('Verifies if the status is called with the code 400', async () => {
+        it("Verifies if the status is called with the code 400", async () => {
           await productsController.create(req, res, next);
           expect(res.status.calledWith(400)).to.be.true;
-        })
-      })
-      describe('When inserted successfully', () => {
-        const req = {}
-        const res = {}
+        });
+      });
+      describe("When name length is less than 5", () => {
+        const req = {};
+        const res = {};
+        const next = sinon.stub().returns();
+
+        before(() => {
+          req.body = {};
+
+          res.status = sinon.stub().returns(res);
+          res.json = sinon.stub().returns();
+
+          sinon
+            .stub(productsService, "create")
+            .resolves("UNPROCESSABLE_ENTITY");
+        });
+        after(() => {
+          productsService.create.restore();
+        });
+
+        it("Verifies if the status is called with the code 422", async () => {
+          await productsController.create(req, res, next);
+          expect(res.status.calledWith(422)).to.be.true;
+        });
+      });
+      describe("When inserted successfully", () => {
+        const req = {};
+        const res = {};
         const next = sinon.stub().returns();
         const data = { id: 1, name: "productX" };
 
@@ -168,25 +191,27 @@ describe("Products controller tests", () => {
           res.status = sinon.stub().returns(res);
           res.json = sinon.stub().returns();
 
-          sinon.stub(productsService, 'create').resolves(data)
-        })
+          sinon.stub(productsService, "create").resolves(data);
+        });
 
         after(async () => {
           productsService.create.restore();
-        })
+        });
 
-        it('Verifies if the status is called with the code 201', async () => {
+        it("Verifies if the status is called with the code 201", async () => {
           await productsController.create(req, res, next);
           expect(res.status.calledWith(201)).to.be.true;
-        })
+        });
 
-        it("Verify if the object has the correct information", async () => {
+        it("Verifies if the object has the correct information", async () => {
           const response = await productsService.create();
 
-          expect(response).to.be.an('object').that.have.all.keys(["id", "name"]);
+          expect(response)
+            .to.be.an("object")
+            .that.have.all.keys(["id", "name"]);
           expect(response).to.be.equal(data);
         });
-      })
-    })
-  })
+      });
+    });
+  });
 });

@@ -3,6 +3,7 @@ const { expect } = require("chai");
 
 const productsService = require("../../../services/productsService");
 const productsModel = require("../../../models/productsModel");
+const { ERROR_MESSAGE } = require("../../../helpers/httpStatusCode");
 const { allProductsResponse } = require("../../../__tests__/_dataMock");
 
 describe("Products services tests", () => {
@@ -105,6 +106,28 @@ describe("Products services tests", () => {
   });
   describe("Create tests", () => {
     describe("Implement new product", () => {
+      describe("When fails validation", () => {
+        before(async () => {
+          sinon.stub(productsModel, "create").resolves(undefined);
+        });
+
+        after(async () => {
+          productsModel.create.restore();
+        });
+
+        it("Verifies when name does not exist", async () => {
+          const response = await productsService.create();
+
+          expect(response).to.be.equal("BAD_REQUEST");
+        });
+
+        it("Verifies when name length is less than 5", async () => {
+          const payload = "Mask";
+          const response = await productsService.create(payload);
+
+          expect(response).to.be.eql("UNPROCESSABLE_ENTITY");
+        });
+      });
       describe("When inserted with sucess", () => {
         const data = { id: 1, name: "productX" };
         const payload = { name: "productX" };
