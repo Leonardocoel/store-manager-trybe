@@ -177,7 +177,7 @@ describe("Products controller tests", () => {
 
         it('Verifies if the status is called with the code 201', async () => {
           await productsController.create(req, res, next);
-          expect(res.status.calledWith(200)).to.be.true;
+          expect(res.status.calledWith(201)).to.be.true;
         })
 
         it("Verify if the object has the correct information", async () => {

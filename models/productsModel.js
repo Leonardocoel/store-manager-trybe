@@ -18,7 +18,8 @@ const getById = async (id) => {
 
 const create = async (name) => {
   const [row] = await connection.execute(
-    'INSERT INTO StorageManager.products (name) VALUES (?)',
+    `INSERT INTO StoreManager.products (name)
+    VALUES (?)`,
     [name],
   );
   const result = {

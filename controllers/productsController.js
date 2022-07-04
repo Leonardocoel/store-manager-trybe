@@ -26,7 +26,21 @@ const getById = async (req, res, next) => {
   }
 };
 
+const create = async (req, res, next) => {
+  try {
+    const { name } = req.body;
+    const result = await productsService.create(name);
+    if (!result) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'invalid name' });
+    }
+    res.status(HTTP_STATUS.CREATED).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };
