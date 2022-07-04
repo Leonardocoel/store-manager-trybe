@@ -16,6 +16,9 @@ const getById = async (id) => {
 };
 
 const create = async (name) => {
+  if (!name) return 'BAD_REQUEST';
+  if (name.length < 5) return 'UNPROCESSABLE_ENTITY';
+  
   const data = await productsModel.create(name);
 
   return data;

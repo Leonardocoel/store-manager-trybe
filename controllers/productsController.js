@@ -1,5 +1,5 @@
 const productsService = require('../services/productsService');
-const HTTP_STATUS = require('../helpers/httpStatusCode');
+const { HTTP_STATUS, ERR_MSG } = require('../helpers/httpStatusCode');
 
 const getAll = async (_req, res, next) => {
   try {
@@ -29,11 +29,16 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   try {
     const { name } = req.body;
-    const result = await productsService.create(name);
-    if (!result) {
-      return res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'invalid name' });
-    }
-    res.status(HTTP_STATUS.CREATED).json(result);
+    const RESULT = await productsService.create(name);
+
+    if (RESULT === 'BAD_REQUEST') {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json(ERR_MSG.NAME_REQUIRED); 
+}
+    if (RESULT === 'UNPROCESSABLE_ENTITY') {
+      return res.status(HTTP_STATUS.UNPROCESSABLE_ENTITY).json(ERR_MSG.NAME_INVALID);
+    } 
+
+       res.status(HTTP_STATUS.CREATED).json(RESULT);
   } catch (err) {
     next(err);
   }
