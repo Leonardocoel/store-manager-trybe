@@ -8,7 +8,7 @@ const create = async (itemsSold) => {
     salesProductsModel.create(id, productId, quantity)));
   
   const result = {
-    status: 201,
+    code: 201,
     sale: { id, itemsSold },
   };
 
