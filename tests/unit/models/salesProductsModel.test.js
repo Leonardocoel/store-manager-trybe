@@ -4,7 +4,7 @@ const { expect } = require("chai");
 const salesProductsModel = require("../../../models/salesProductsModel");
 const connection = require("../../../helpers/connection");
 
-describe("salesProducts model tests", () => {
+describe("SalesProducts model tests", () => {
   describe("Database create tests", () => {
     describe("Insert sales in the database", () => {
       it("Verifies if the function is called with the correct parameters", async () => {

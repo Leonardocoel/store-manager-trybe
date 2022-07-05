@@ -4,15 +4,14 @@ const { expect } = require("chai");
 const salesService = require("../../../services/salesService");
 const salesModel = require("../../../models/salesModel");
 const salesProductsModel = require("../../../models/salesProductsModel");
-const { ERR_MSG } = require("../../../helpers/httpStatusCode");
 const {
   rightSaleBody,
   saleCreateResponse,
 } = require("../../../__tests__/_dataMock");
 
-describe("Products services tests", () => {
-  describe("Create tests", () => {
-    describe("Implement new product", () => {
+describe("Sales services tests:", () => {
+  describe("Create", () => {
+    describe("New sale", () => {
       describe("When fails validation", () => {});
       describe("When inserted with sucess", () => {
         before(async () => {
@@ -42,9 +41,9 @@ describe("Products services tests", () => {
 
           const response = await salesService.create(rightSaleBody);
 
-          expect(response).to.be.an("object")
-          expect(response).to.have.all.keys(["status", "sale"]);
-          expect(response.sale).to.have.all.keys(['id', 'itemsSold'])
+          expect(response).to.be.an("object");
+          expect(response).to.have.all.keys(["code", "sale"]);
+          expect(response.sale).to.have.all.keys(["id", "itemsSold"]);
         });
       });
     });
