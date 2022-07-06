@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.use(helmet());
 app.use(morgan('common'));
 app.use('/products', rescue(router.productsRouter));
+app.use('/sales', rescue(router.salesRouter));
 
 // não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {
