@@ -27,14 +27,14 @@ describe("Sales Controller tests:", () => {
         });
 
         after(() => {
-          salesService.create.restore()
+          salesService.create.restore();
         });
 
-        it('Status is called with the code 201', async () => {
+        it("Status is called with the code 201", async () => {
           await salesController.create(req, res, next);
           expect(res.status.calledWith(201)).to.be.true;
-        })
-        
+        });
+
         it("Object has the correct properties", async () => {
           const response = await salesService.create();
 
@@ -42,7 +42,38 @@ describe("Sales Controller tests:", () => {
           expect(response).to.have.all.keys(["code", "sale"]);
           expect(response.sale).to.have.all.keys(["id", "itemsSold"]);
         });
-        it
+      });
+      describe("If fails", () => {
+        const req = {};
+        const res = {};
+        const next = sinon.stub().returns();
+
+        before(() => {
+          req.body = {};
+          res.status = sinon.stub().returns(res);
+          res.json = sinon.stub().returns();
+
+          sinon
+            .stub(salesService, "create")
+            .resolves({ code: 400, message: "error message" });
+        });
+
+        after(() => {
+          salesService.create.restore();
+        });
+
+        it("Status is called with the code 400", async () => {
+          await salesController.create(req, res, next);
+          expect(res.status.calledWith(400)).to.be.true;
+        });
+
+        it("Object has the correct message", async () => {
+          const response = await salesService.create();
+
+          expect(response).to.be.an("object");
+          expect(response).to.have.all.keys(["code", "message"]);
+          expect(response.message).to.be.eql("error message")
+        });
       });
     });
   });
