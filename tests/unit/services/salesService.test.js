@@ -10,6 +10,20 @@ const {
   rightSaleBody,
   saleCreateResponse,
 } = require("../../../__tests__/_dataMock");
+const getAllMock = [
+  {
+    saleId: 1,
+    date: "2021-09-09T04:54:29.000Z",
+    productId: 1,
+    quantity: 2,
+  },
+  {
+    saleId: 2,
+    date: "2021-09-09T04:54:54.000Z",
+    productId: 2,
+    quantity: 2,
+  },
+];
 
 describe("Sales services tests:", () => {
   describe("Create", () => {
@@ -97,6 +111,105 @@ describe("Sales services tests:", () => {
           expect(response).to.have.all.keys(["code", "sale"]);
           expect(response.sale).to.have.all.keys(["id", "itemsSold"]);
           expect(response).to.be.eql({ code: 201, sale: saleCreateResponse });
+        });
+      });
+    });
+  });
+  describe("Read tests", () => {
+    describe("Require all data", () => {
+      describe("When the result is undefined", () => {
+        before(async () => {
+          sinon.stub(salesModel, "getAll").resolves();
+        });
+
+        after(async () => {
+          salesModel.getAll.restore();
+        });
+
+        it("Verify if the return is a error", async () => {
+          const response = await salesService.getAll();
+
+          expect(response).is.eql({ code: 404, message: "Sale not found" });
+        });
+      });
+
+      describe("When the result is defined", () => {
+        before(async () => {
+          sinon.stub(salesModel, "getAll").resolves(getAllMock);
+        });
+
+        after(async () => {
+          salesModel.getAll.restore();
+        });
+
+        it("Verify if it returns an array of objects", async () => {
+          const { sale } = await salesService.getAll();
+
+          expect(sale).to.be.an("array");
+          sale.forEach((r) => {
+            expect(r).to.be.an("object");
+            expect(r).to.have.all.keys([
+              "saleId",
+              "date",
+              "productId",
+              "quantity",
+            ]);
+          });
+        });
+
+        it("Verify if array is in ascending order by id", async () => {
+          const { sale } = await salesService.getAll();
+
+          expect(sale).to.be.ascendingBy("saleId");
+        });
+      });
+    });
+
+    describe("Request data by id", () => {
+      describe("When the id is not valid", () => {
+        it("Verify if the id is invalid and returns false", async () => {
+          const response = await salesService.getById();
+
+          expect(response).to.be.a("boolean").to.be.false;
+        });
+      });
+
+      describe("When the result is undefined", () => {
+        before(async () => {
+          sinon.stub(salesModel, "getById").resolves();
+        });
+
+        after(async () => {
+          salesModel.getById.restore();
+        });
+
+        it("Verify if the return is a error", async () => {
+          const response = await salesService.getById(2);
+
+          expect(response).is.eql({ code: 404, message: "Sale not found" });
+        });
+      });
+
+      describe("When the result is defined", () => {
+        before(async () => {
+          sinon.stub(salesModel, "getById").withArgs(2).resolves(getAllMock[1]);
+        });
+
+        after(async () => {
+          salesModel.getById.restore();
+        });
+
+        it("Verify if it returns an object", async () => {
+          const { sale } = await salesService.getById(2);
+
+          expect(sale).to.be.an("object");
+        });
+
+        it("Verify if the object has the correct information", async () => {
+          const { sale } = await salesService.getById(2);
+
+          expect(sale).to.have.property("saleId", 2);
+          expect(sale).to.be.equal(getAllMock[1]);
         });
       });
     });
