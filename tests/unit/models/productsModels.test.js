@@ -62,25 +62,90 @@ describe("Products model tests", () => {
       });
     });
   });
-  describe('Database create tests', () => {
-    describe('Insert a new product in the database', () => {
+  describe("Database create tests", () => {
+    describe("Insert a new product in the database", () => {
       const payload = {
-        name: 'productX'
-      }
+        name: "productX",
+      };
       before(async () => {
         const execute = [{ insertId: 1 }];
 
-        sinon.stub(connection, 'execute').resolves(execute)
-      })
+        sinon.stub(connection, "execute").resolves(execute);
+      });
       after(async () => {
         connection.execute.restore();
-      })
-      it('Validates if it returns an object with the correct id', async () => {
+      });
+      it("Validates if it returns an object with the correct id", async () => {
         const response = await productsModel.create(payload);
 
-        expect(response).to.be.an('object').that.have.property('id', 1);
-      })
+        expect(response).to.be.an("object").that.have.property("id", 1);
+      });
+    });
+  });
+  describe("Database update tests", () => {
+    describe("Change product name", () => {
+      before(async () => {
+        const execute = [{ affectedRows: 1 }];
 
-    })
-  })
+        sinon.stub(connection, "execute").resolves(execute);
+      });
+      after(async () => {
+        connection.execute.restore();
+      });
+      it("Validates if it returns affectedRows is 1", async () => {
+        const response = await productsModel.update();
+
+        expect(response).to.equal(1);
+      });
+    });
+
+    describe("Product id invalid", () => {
+      before(async () => {
+        const execute = [{ affectedRows: 0 }];
+
+        sinon.stub(connection, "execute").resolves(execute);
+      });
+      after(async () => {
+        connection.execute.restore();
+      });
+      it("Validates if it returns affectedRows is not 1", async () => {
+        const response = await productsModel.update();
+
+        expect(response).to.not.be.equal(1);
+      });
+    });
+  });
+  describe("Database delete tests", () => {
+    describe("Delete product", () => {
+      before(async () => {
+        const execute = [{ affectedRows: 1 }];
+
+        sinon.stub(connection, "execute").resolves(execute);
+      });
+      after(async () => {
+        connection.execute.restore();
+      });
+      it("Validates if it returns affectedRows is 1", async () => {
+        const response = await productsModel.exclude();
+
+        expect(response).to.equal(1);
+      });
+    });
+
+    describe("Fail to delete product", () => {
+      before(async () => {
+        const execute = [{ affectedRows: 0 }];
+
+        sinon.stub(connection, "execute").resolves(execute);
+      });
+      after(async () => {
+        connection.execute.restore();
+      });
+      it("Validates if it returns affectedRows is not 1", async () => {
+        const response = await productsModel.exclude();
+
+        expect(response).to.not.be.equal(1);
+      });
+    });
+  });
 });
