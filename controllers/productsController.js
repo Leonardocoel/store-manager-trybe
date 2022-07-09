@@ -44,8 +44,37 @@ const create = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const { code, message, product } = await productsService.update(id, name);
+    if (!product) return res.status(code).json({ message });
+    
+    res.status(code).json(product);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const exclude = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const { code, message } = await productsService.exclude(id);
+    if (message) return res.status(code).json({ message });
+    
+    res.status(code).end();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAll,
   getById,
   create,
+  update,
+  exclude,
 };
