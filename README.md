@@ -18,4 +18,4 @@ Project made for Trybe whose objective is to build an API for a sales management
 #
 </br>
 
-JAVACRIPT, NODEJS, MYSQL, EXPRESSJS, TDD , MOCHA, CHAI, SINON , DBEAVER, POSTMAN.
+JAVASCRIPT, NODEJS, MYSQL, EXPRESSJS, TDD , MOCHA, CHAI, SINON , DBEAVER, POSTMAN.
